@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Entry System</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Add custom styles directly in the head for the demo */
+        select, input[type="number"] {
+            width: 100%; /* Makes the select box the same width as the input */
+            padding: 8px; /* Adjust padding for a consistent look */
+            font-size: 16px; /* Adjust font size for better visibility */
+            box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+        }
+    </style>
+</head>
+<body class="entry-background">
+    <!-- Your HTML content for the order entry form -->
+    <br><br><br><br>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h6 style="color:white">Order Entry Form</h6>
+        <form action="{{ url_for('main.entry') }}" method="POST" id="order-form">
+            <div class="form-group">
+                <label for="product">Product:</label>
+                <select id="product" name="product" required>
+                    <option value="Espresso">Espresso</option>
+                    <option value="Cappuccino">Cappuccino</option>
+                    <option value="Americano">Americano</option>
+                    <option value="Caffe Latte">Caffe Latte</option>
+                    <option value="Iced Coffee">Iced Coffee</option>
+                    <option value="Cold Brew">Cold Brew</option>
+                    <option value="Mocha">Mocha</option>
+                    <option value="Caramel">Caramel</option>
+                    <option value="Hot Coffee">Hot Coffee</option>
+                    <option value="Flat White">Flat White</option>
+                    <option value="Macchiato">Macchiato</option>
+                    <option value="Frappuccino">Frappuccino</option>
+                    <option value="Black Coffee">Black Coffee</option>
+                    <option value="Cortado">Cortado</option>
+                    <option value="Piccolo Latte">Piccolo Latte</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" required>
+            </div>
+            <button type="submit">Submit Order</button>
+        </form>
+    </div>
+
+    <!-- JavaScript code for handling form submission -->
+    <script>
+        document.getElementById('order-form').addEventListener('submit', function(event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Retrieve the values of the product and quantity fields
+            const product = document.getElementById('product').value;
+            const quantity = document.getElementById('quantity').value;
+
+            // Redirect the user to the review_cart.html page with the product and quantity data as URL parameters
+            window.location.href = `/review?product=${encodeURIComponent(product)}&quantity=${quantity}`;
+        });
+    </script>
+</body>
+</html>

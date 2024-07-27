@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cookiesindex</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h2> Are you the User?</h2>
+    <br><br>
+    <form id="loginForm">
+        <input class="form-control" id="key" type="text" name="Email" placeholder="Email" required=""><br>
+        <input class="form-control" id="value" type="password" name="Password" placeholder="Password" required=""><br>
+        <button type="submit">Yes</button>
+    </form>
+    <div id="result"></div>
+    <script src="{{ url_for('static', filename='cookies.js') }}"></script>
+</body>
+</html>

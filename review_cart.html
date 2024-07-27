@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/menu">
+    <title>Review Cart</title>
+    <!-- Style for buttons and table -->
+    <style>
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color:black;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #new-product,
+        #new-quantity {
+            font-size: 20px; /* Increase font size for input fields */
+            padding: 10px; /* Increase padding for larger input fields */
+            margin-right: 10px; /* Add some space between input fields */
+
+        }
+
+        .cart-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item span {
+            flex: 1;
+            padding: 5px;
+            font-size: 37px;
+            color: white;
+        }
+
+        .quantity-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity {
+            margin: 0 10px;
+            color: white; /* Set color to white */
+            font-size: 37px;
+        }
+
+        .price {
+            margin-left: 20px;
+            color: white; /* Set color to white */
+            font-size: 40px;
+        }
+
+        .add-product-form {
+            margin-bottom: 20px;
+          
+            
+        
+        }
+
+        .review-background {
+            background-image: url("/static/images/br.jpg");
+        }
+
+        nav a {
+            color: white; /* Set color of links in nav to white */
+            text-decoration: none; /* Remove underline */
+        }
+    </style>
+</head>
+<body class="review-background" data-user-id="{{ current_user.id }}">
+    <br><br><br><br>
+    <nav>    
+        <li><a href="/" >Home</a></li>    
+    </nav>
+
+    <h1 style="color: white;"></style>Review Cart</h1>
+
+    <!-- Form to add a new product -->
+    <form id="add-product-form" class="add-product-form">
+        <select id="new-product" name="new-product">
+            <option value="Espresso">Espresso</option>
+            <option value="Cappuccino">Cappuccino</option>
+            <option value="Americano">Americano</option>
+            <option value="Caffe Latte">Caffe Latte</option>
+            <option value="Iced Coffee">Iced Coffee</option>
+            <option value="Cold Brew">Cold Brew</option>
+            <option value="Mocha">Mocha</option>
+            <option value="Caramel">Caramel</option>
+            <option value="Hot Coffee">Hot Coffee</option>
+            <option value="Flat White">Flat White</option>
+            <option value="Macchiato">Macchiato</option>
+            <option value="Frappuccino">Frappuccino</option>
+            <option value="Black Coffee">Black Coffee</option>
+            <option value="Cortado">Cortado</option>
+            <option value="Piccolo Latte">Piccolo Latte</option>
+        </select>
+        <input type="number" id="new-quantity" name="new-quantity" placeholder="Enter quantity" min="1">
+        <button type="submit" class="button">Add Product</button>
+    </form>
+
+    <div id="cart-items">
+        <!-- Ordered details will be dynamically added here -->
+    </div>
+    <div id="total-price" class="price"></div>
+    <!-- Form to proceed to payment -->
+    <div id="loyalty-points-container"></div>
+        
+   
+        <button id="payment-button" class="button">Proceed to Payment</button>
+    </form>
+    
+    <!-- Loyalty Points Form -->
+    <!--form id="loyalty-points-form" action="/api/updateLoyaltyPoints" method="POST">
+        <input type="hidden" id="user_id" name="user_id" value="1"> < Replace with actual user ID >
+        <input type="hidden" id="loyalty_points" name="loyalty_points">
+        <button type="button" onclick="updateLoyaltyPoints(100)">Update Loyalty Points</button>
+    </form-->
+
+    
+
+    <!-- JavaScript to populate the review cart dynamically -->
+
+
+
+    <script>
+        
+        
+        let totalPrice = 0;
+
+        // Function to fetch the price of the product from menu.html
+        //function getProductPrice(productName) {
+        //    const menuItems = document.querySelectorAll('.item');
+        //    let price = 0;
+         //   menuItems.forEach(item => {
+         //       if (item.querySelector('h3').textContent.trim() === productName) {
+         //           price = parseFloat(item.querySelector('span').textContent.replace('$', ''));
+         //       }
+         //   });
+          //  return price;
+       // }
+
+       function getProductPrice(productName) {
+            const menuItems = {
+                "Espresso": 2.50,
+                "Cappuccino": 3.00,
+                "Americano": 2.75,
+                "Caffe Latte": 3.00,
+                "Iced Coffee": 4.00,
+                "Cold Brew": 3.75,
+                "Mocha": 4.25,
+                "Caramel": 4.50,
+                "Hot Coffee": 3.00,
+                "Flat White": 4.00,
+                "Macchiato": 3.25,
+                "Frappuccino": 4.75,
+                "Black Coffee": 2.50,
+                "Cortado": 2.50,
+                "Piccolo Latte": 3.50
+            };
+            return menuItems[productName] || 0;
+        }
+
+        // Function to create and add a new cart item or update quantity if the item already exists
+        function addCartItem(product, quantity) {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const price = getProductPrice(product);
+            const existingCartItem = cartItemsDiv.querySelector(`.cart-item span[data-product="${product}"]`);
+            if (existingCartItem) {
+                const quantitySpan = existingCartItem.nextElementSibling.querySelector('.quantity');
+                let currentQuantity = parseInt(quantitySpan.textContent);
+                currentQuantity += quantity;
+                quantitySpan.textContent = currentQuantity;
+            } else {
+                const orderedItem = document.createElement('div');
+                orderedItem.classList.add('cart-item');
+                orderedItem.innerHTML = `
+                    <span data-product="${product}">${product}</span>
+                    <div class="quantity-container">
+                        <button class="button increment">+</button>
+                        <span class="quantity">${quantity}</span>
+                        <button class="button decrement">-</button>
+                    </div>
+                    <span class="price">$${(quantity * price).toFixed(2)}</span>
+                `;
+                cartItemsDiv.appendChild(orderedItem);
+                // Add event listeners to the increment and decrement buttons
+                const incrementButtons = orderedItem.querySelectorAll('.increment');
+                incrementButtons.forEach(button => {
+                    button.addEventListener('click', incrementQuantity);
+                });
+                const decrementButtons = orderedItem.querySelectorAll('.decrement');
+                decrementButtons.forEach(button => {
+                    button.addEventListener('click', decrementQuantity);
+                });
+            }
+            totalPrice += quantity * price;
+            document.getElementById('total-price').textContent = `Total: $${totalPrice.toFixed(2)}`;
+            const loyaltyPoints = Math.round(totalPrice * 0.1); // Calculate 10% of total price as loyalty points
+
+// Display loyalty points message
+const loyaltyPointsContainer = document.getElementById('loyalty-points-container');
+loyaltyPointsContainer.innerHTML = `<h2 style="color: white;">You earned ${loyaltyPoints} points!</h2>`;
+document.getElementById('total-price').textContent = `Total: $${totalPrice.toFixed(2)}`;
+        }
+
+        //function updateLoyaltyPoints(totalPrice) {
+          //  const loyaltyPoints = Math.floor(totalPrice * 10);
+            //const loyaltyPointsContainer = document.getElementById('loyalty-points-container');
+            //loyaltyPointsContainer.innerText = `Loyalty Points: ${loyaltyPoints}`;
+            //document.getElementById('loyalty_points').value = loyaltyPoints;
+
+            // Send a request to update the loyalty points in the backend
+           // fetch('/api/updateLoyaltyPoints', {
+             //   method: 'POST',
+              //  headers: {
+              //      'Content-Type': 'application/json'
+               // },
+               // body: JSON.stringify({ user_id: 1, loyalty_points: loyaltyPoints }) // Update the user_id as needed
+           // })
+           // .then(response => response.json())
+          //  .then(data => {
+          //      console.log(data);
+          //  })
+          //  .catch(error => {
+          //      console.error('Error:', error);
+          //  });
+       // }
+       function getUserId() {
+            return document.body.getAttribute('data-user-id');
+        }
+        
+        document.getElementById('add-product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const product = document.getElementById('new-product').value;
+            const quantity = parseInt(document.getElementById('new-quantity').value, 10);
+            if (quantity > 0) {
+                addCartItem(product, quantity);
+           }
+        });
+
+
+
+
+        // Function to handle incrementing quantity
+        function incrementQuantity(event) {
+            const button = event.target;
+            if (button.classList.contains('increment')) {
+                const quantitySpan = button.nextElementSibling;
+                let quantity = parseInt(quantitySpan.textContent);
+                quantity++;
+                quantitySpan.textContent = quantity;
+                updateTotalPrice();
+            }
+        }
+
+        // Function to handle decrementing quantity
+        function decrementQuantity(event) {
+            const button = event.target;
+            if (button.classList.contains('decrement')) {
+                const quantitySpan = button.previousElementSibling;
+                let quantity = parseInt(quantitySpan.textContent);
+                if (quantity > 1) {
+                    quantity--;
+                    quantitySpan.textContent = quantity;
+                    updateTotalPrice();
+                } else {
+                    // If quantity becomes 0 or negative, remove the cart item
+                    const cartItem = button.closest('.cart-item');
+                    cartItem.remove();
+                    updateTotalPrice();
+                }
+                updateTotalPrice();
+            }
+        }
+
+        // Function to update the total price
+       // Function to update the total price and calculate loyalty points
+        // Function to send loyalty points to backend
+    
+      
+function updateTotalPrice() {
+    totalPrice = 0;
+    const cartItems = document.querySelectorAll('.cart-item');
+    cartItems.forEach(item => {
+        const quantity = parseInt(item.querySelector('.quantity').textContent);
+        const productName = item.querySelector('span[data-product]').getAttribute('data-product');
+        const price = getProductPrice(productName);
+        totalPrice += quantity * price;
+    });
+   
+
+    const loyaltyPoints = Math.round(totalPrice * 0.1); // Calculate 10% of total price as loyalty points
+
+    // Display loyalty points message
+    const loyaltyPointsContainer = document.getElementById('loyalty-points-container');
+    loyaltyPointsContainer.innerHTML = `<h2 style="color: white;">You earned ${loyaltyPoints} points!</h2>`;
+    document.getElementById('total-price').textContent = `Total: $${totalPrice.toFixed(2)}`;
+
+
+
+  
+}
+  // Function to get the value of a cookie by name
+  function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        const email = getCookie('email');  
+        
+        function updateLoyaltyPoints(email, loyaltyPoints) {
+    fetch('/api/updateLoyaltyPoints', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            loyalty_points: loyaltyPoints
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Loyalty points updated successfully');
+        } else {
+            console.error('Failed to update loyalty points:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+      // Event listener for loading the page
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const product = urlParams.get('product');
+            const quantity = parseInt(urlParams.get('quantity'));
+            addCartItem(product, quantity);
+            updateTotalPrice();
+        });
+
+        // Event listener for submitting the add product form
+        document.getElementById('add-product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const newProductInput = document.getElementById('new-product');
+            const newQuantityInput = document.getElementById('new-quantity');
+            const product = newProductInput.value.trim();
+            const quantity = parseInt(newQuantityInput.value);
+            if (product && quantity > 0) {
+                addCartItem(product, quantity);
+                newProductInput.value = '';
+                newQuantityInput.value = '';
+                updateTotalPrice();
+            }
+        });
+        // Function to get user_id from data attribute
+    function getUserId() {
+        return document.body.getAttribute('data-user-id');
+    }
+
+    
+    document.getElementById('payment-button').addEventListener('click', function() {
+       // const userId = document.body.getAttribute('data-user-id');
+        const totalPrice = parseFloat(document.getElementById('total-price').textContent.replace('Total: $', ''));
+        const loyaltyPoints = Math.round(totalPrice * 0.1); // Calculate 10% of total price as loyalty points
+
+        //console.log('User ID:', userId);
+        console.log('Total Price:', totalPrice);
+        console.log('Loyalty Points:', loyaltyPoints);
+
+        fetch('/api/updateLoyaltyPoints', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    //body: JSON.stringify({ user_id: userId, loyalty_points: loyaltyPoints })
+})
+.then(response => response.json())
+.then(data => {
+    console.log('API response:', data); // Log response for debugging
+    if (data.success) {
+        // Debugging alert before redirection
+        alert('Redirecting to cookiesindex page...');
+        // Redirect with URL parameters
+        window.location.href = `/cookiesindex?user_id=${encodeURIComponent(userId)}&loyalty_points=${loyaltyPoints}`;
+    } else {
+        alert('Failed to update loyalty points: ' + data.message);
+    }
+})
+.catch(error => {
+    window.location.href = '/cookiesindex';
+    });
+
+            
+    });
+    
+
+    
+
+            //document.getElementById('payment-form').addEventListener('submit', function(event) {
+            //event.preventDefault();
+            //const productSpans = document.querySelectorAll('.cart-item span[data-product]');
+            //const quantities = document.querySelectorAll('.cart-item .quantity');
+
+           // let products = [];
+            //let quantitiesArray = [];
+
+            //productSpans.forEach((productSpan, index) => {
+              //  products.push(productSpan.getAttribute('data-product'));
+                //quantitiesArray.push(quantities[index].textContent);
+            //});
+
+            //console.log('Products:', products);
+            //console.log('Quantities:', quantitiesArray);
+
+            //const paymentProductInput = document.getElementById('payment-product');
+            //const paymentQuantityInput = document.getElementById('payment-quantity');
+
+            //paymentProductInput.value = JSON.stringify(products);
+            //paymentQuantityInput.value = JSON.stringify(quantitiesArray);
+
+            //console.log('Form Data:', {
+              //  products: paymentProductInput.value,
+                //quantities: paymentQuantityInput.value
+            //});
+
+            //document.getElementById('payment-form').submit();
+        //});
+    //    window.location.href = '/cookiesindex';
+    </script>
+</body>
+</html>

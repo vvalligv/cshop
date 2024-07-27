@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Coffeewebsite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-3iifUkuK3IXzJLfifHKv8TpdhYII9jzIced0aAzKStA3r7sYKbFI5KiHFbFJ1Fp/" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <meta charset="utf-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale-1">
+    <style type="text/css">
+        nav {
+            float: left; 
+            word-spacing: 20px;
+            padding: 10px;
+        }
+        nav li {
+            display: inline-block;
+            line-height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <!--div class="logo">
+                <img src="logocof.jpg">
+            </div-->
+            <nav>
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/login">LOGIN</a></li>
+                    <li><a href="/registration">SIGNUP</a></li>
+                    <!--li><a href="/menu">MENU</a></li-->
+                </ul>
+            </nav>
+        </header>
+        <section>
+            <div class="sec_img">
+                <br><br><br>
+                <div class="box">
+                    <br><br><br><br>
+                    <h1 style="text-align: center; font-size: 35px"> Coffee : <br><br><br>The Gasoline of life</h1><br><br>
+                </div>
+            </div>
+            <h1 style="color:black ; font-size:35px;font-style: italic;">About Us</h1><br>
+
+            <!--img src="menucof.jpg" height="250px" -->
+            <p style="text-align:justify; ">An establishment that specializes in serving many kinds of coffee, including cappuccino, latte, and espresso.</p>
+            <p style="text-align-last:center ; font-family: Bold; font-style:oblique; font-size: 25px;color:chocolate;">Our Mission: To provide outstanding coffee experiences every day, inspiring and educating future generations of coffee drinkers.</p>
+            <p>Welcome, where every cup tells a story. We've been dedicated to providing our customers with the finest quality coffee and a cozy atmosphere to enjoy it in.</p>
+            <p>We believe in sourcing the best beans from around the world and roasting them to perfection in-house. Our skilled baristas are trained to craft each cup with care, ensuring that every sip is a delightful experience.</p>
+            <p>But we're more than just a coffee shop. We're a community hub where friends gather, ideas flow, and stories are shared. Whether you're stopping by for your morning pick-me-up or unwinding with a latte in the afternoon, we're here to make your day a little brighter.</p>
+            <p>Thank you for being a part of our journey. We invite you to join us and experience the warmth and flavor that sets us apart.</p><br><br>
+
+            <h1 style="color:black; font-style: italic;font-size: 35px;">Contact Us</h1><br><br>
+            <section class="contact-section">
+                <div class="container">
+                    <h2>Get in Touch</h2><br>
+                    <p>We'd love to hear from you! Whether you have a question, feedback, or just want to say hello, feel free to reach out to us using the contact information below:</p><br><br>
+                    <div class="contact-info">
+                        <p><img src="/static/images/loc.jpg"  alt="Location" height="20px" width="20px"> <strong>Address:</strong> 123 Main Street, TamilNadu, India</p><br>
+                        <p><img src="/static/images/phone.jpg" alt="Phone" height="20px" width="20px"> <strong>Phone:</strong> 123456789</p><br>
+                        <p><img src="/static/images/email.jpg" alt="Email" height="20px" width="20px"> <strong>Email:</strong> info@yourcaffeeshop.com</p><br>
+                    </div>
+                    <!-- Contact Form -->
+                    <h6 style="color:white; font-style: italic;">Contact using:</h6><br>
+                    <form action="/contact"  method="POST">
+                        <div class="form-group">
+                            <label for="name">Your Name:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Your Message:</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <br><br>
+                        <button type="button" onclick="submitForm()">Submit</button>
+                    </form>
+                </div>
+            </section>
+        </section>
+        <footer>
+        </footer>
+    </div>
+    <script>
+        function submitForm() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var message = document.getElementById("message").value;
+
+            if (!name || !email || !message) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            // Construct the message
+            var fullMessage = "Name: " + name + "\nEmail: " + email + "\nMessage: " + message;
+
+            // Display the message (for demonstration)
+            alert(fullMessage);
+
+            // Clear form fields (optional)
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+            window.location.href = '/thankyou';
+        }
+    </script>
+</body>
+</html>

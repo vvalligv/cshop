@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LOGIN</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+
+    <header style="height: 90px;">
+        <div class="logo">
+            <h1 style="color: white;font-size: 15px;word-spacing: 10px;line-height: 60px;margin-top: 20px;">COFFEE FOR LIFE</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/registration">SIGNUP</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <div class="log_img">
+            <br>
+            <div class="box1">
+                <h1 style="text-align: center;font-size: 35px;">Login</h1><br>
+                <!-- Flash messages block -->
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <ul class="flashes">
+                    {% for message in messages %}
+                      <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+               
+                <form id="loginForm" name="login" action="" method="post">
+                    
+                    <div class="login">
+                        <input class="form-control"  type="text" name="Email" placeholder="Email" required=""><br>
+                        <input class="form-control" type="password" name="Password" placeholder="Password" required=""><br>
+                        <button type="submit">Login</button>
+                    </div>
+                </form>
+                <div id = "result"></div>
+                <p style="color: white; padding-left: 15px;">
+                    <br><br>
+                    <a style="color:white;" href="/forgot_password">Forgot Password?</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    New to this website?<a style="color:white;" href="/registration">Sign Up</a>
+                </p>
+            </div>
+        </div>
+    </section>
+   
+    <script>
+        // JavaScript to handle form submission and redirection
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            // Redirect to login.html after form submission
+            window.location.href = '/menu';
+
+        
+        });
+    </script>
+</body>
+</html>

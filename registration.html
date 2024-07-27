@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>REGISTRATION</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .error {
+            color: red;
+            display: none;
+        }
+        .success {
+            color: green;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <header style="height: 80px;">
+        <div class="logo">
+            <h1 style="color: white;font-size: 15px;word-spacing: 10px;line-height: 60px;margin-top: 20px;">COFFEE FOR LIFE</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <div class="reg_img">
+            <div class="box2">
+                <h1 style="text-align: center;font-size: 35px;">Registration</h1><br>
+                <!-- Flash messages block -->
+                
+                <form id="registrationForm" name="Registration" action="{{ url_for('auth.registration') }}" method="post">
+                    <div class="reg">
+                        <input class="form-control" type="text" name="FullName" placeholder="FullName" required><br>
+                        <input class="form-control" type="text" name="Email" placeholder="Email" required><br>
+                        <input class="form-control" type="password" name="Password" placeholder="Password" required><br>
+                        <input class="form-control" type="password" name="Confirm_Password" placeholder="Confirm Password" required><br>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    {% if category == 'error' %}
+                                        <span class="error">{{ message }}</span><br>
+                                    {% elif category == 'success' %}
+                                        <span class="success">{{ message }}</span><br>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        <button type="submit">Sign Up</button>
+                    </div>
+                </form>
+                
+                
+            </div>
+        </div>
+    </section>
+    <script>
+
+        function validatePasswords() {
+
+
+            var password = document.getElementById("Password").value;
+            var confirmPassword = document.getElementById("Confirm_Password").value;
+            var errorMessage = document.getElementById("error-message");
+
+            if (password !== confirmPassword) {
+                errorMessage.style.display = "block";
+                
+                return false; // Prevent form submission
+            } else {
+                errorMessage.style.display = "none";
+                return true; // Allow form submission
+            }
+        }
+        
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            var errorMessage = document.getElementById("error-message");
+            if (!validatePasswords()) {
+                event.preventDefault();
+                //errorMessage.style.display = "block";
+                
+                 // Prevent form submission if passwords do not match
+            } else {
+                //errorMessage.style.display = "none";
+                // Redirect to login page if passwords match
+                window.location.href = '/login';
+            }
+        });
+        // JavaScript to handle form submission and redirection
+        
+        
+        
+    </script>
+</body>
+</html>
+
+
+
+

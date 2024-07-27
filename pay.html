@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+      .pay-background{
+        background-image: url("/static/images/cof.png");
+
+      }
+      .payment-button {
+    padding: 15px 45px; /* Increase padding for bigger buttons */
+    font-size: 18px; /* Increase font size for bigger buttons */
+    border-radius: 10px; /* Adjust border radius as needed */
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px; /* Add some space between buttons */
+}
+
+.payment-button:hover {
+    background-color: #0056b3;
+}
+      #checkout-button{
+       height: 40px;
+       width:100px;
+      }
+      .loyalty-message {
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+
+    </style>
+</head>
+<body class="pay-background">
+    <!-- Order Confirmation -->
+
+
+    <h2 style="color: white;">Order Confirmation</h2>
+    <!-- Display a summary of the order (e.g., items, total amount) -->
+   
+
+    <!-- Payment -->
+    <h2 style="color:white;">Payment</h2>
+
+    <!-- Google Pay -->
+    <img src="/static/images/gpay.jpg" height="100px" width="100px">
+    <button id="google-pay-button" class="payment-button" data-method="googlepay">Pay with Google Pay</button><br><br>
+    <h5 style="color:white;">Or</h5> 
+    <!-- Cash on Delivery -->
+    <img src="/static/images/cash.png" height="100px" width="100px">
+    <button id="cash-on-delivery-button" class="payment-button" data-method="cashondelivery">Cash on Delivery</button><br><br>
+    <h5 style="color:white;">Or</h5> 
+    <!-- Card Payment Button -->
+    <img src="/static/images/card.png" height="100px" width="100px">
+    <button id="card-button" class="payment-button" data-method="card">Pay with Card</button><br><br>
+
+    <!-- Card Payment Form -->
+    <form id="card-payment-form" class="payment-form" style="display: none;">
+        <label for="card-number"  style="color: white;">Card Number:</label>
+        <input type="text" id="card-number" name="card-number" required><br><br>
+        <!-- Add more fields for payment information (e.g., expiration date, CVV) -->
+        <label for="exp" style="color: white;">Expiration Date:</label>
+        <input type="text" id="exp" name="MM/YY" required><br><br>
+        <label for="cvv" style="color: white;">CVV:</label>
+        <input type="text" id="cvv" name="CVV" required><br><br>
+        <button type="submit">Confirm Payment</button><br><br>
+    </form>
+    <button id="checkout-button" type="button" >Checkout</button>
+
+    <script>
+        // Event listener for payment button click
+        const paymentButtons = document.querySelectorAll('.payment-button');
+        paymentButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                const method = event.target.getAttribute('data-method');
+                // Call the corresponding payment method function based on the button clicked
+                switch (method) {
+                    case 'googlepay':
+                        processGooglePay();
+                        break;
+                    case 'cashondelivery':
+                        processCashOnDelivery();
+                        break;
+                    case 'card':
+                        showCardPaymentForm();
+                        break;
+                }
+            });
+        });
+
+        function processGooglePay() {
+            // Implement Google Pay integration here
+            alert('Redirecting to Google Pay...');
+            window.location.href = 'https://pay.google.com';
+        }
+
+        function processCashOnDelivery() {
+            // Implement Cash on Delivery logic here
+            alert('Cash on Delivery selected. Your order will be confirmed upon delivery.');
+        }
+
+        function showCardPaymentForm() {
+            // Display the card payment form
+            document.getElementById('card-payment-form').style.display = 'block';
+
+            // Scroll to the card payment form
+            document.getElementById('card-payment-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event listener for the card payment form submission
+        document.getElementById('card-payment-form').addEventListener('submit', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+            
+            // Process the card payment
+            alert('Processing card payment...');
+            // You can add your payment processing logic here
+        });
+
+        // Event listener for the checkout button click
+        document.getElementById('checkout-button').addEventListener('click', function() {
+            window.location.href = '/confirm';
+        });
+    </script>
+</body>
+</html>

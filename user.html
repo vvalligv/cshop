@@ -1,0 +1,27 @@
+<!-- templates/menu.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Welcome, {{ current_user.FullName }}!</h1>
+        <h2>You have {{ current_user.Points }} loyalty points.</h2>
+        <p>Select a product to order:</p>
+        <ul>
+            <li><a href="/entry">Order Entry</a></li>
+        </ul>
+    </div>
+</body>
+</html>

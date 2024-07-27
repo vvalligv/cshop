@@ -1,0 +1,74 @@
+<!--DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Loyalty Points</title>
+</head>
+<body>
+    <form id="loyalty-points-form" action="/api/updateLoyaltyPoints" method="POST">
+        <input type="hidden" id="user_id" name="user_id" value="1"> < Replace with actual user ID >
+        <input type="hidden" id="loyalty_points" name="loyalty_points">
+        <button type="button" onclick="updateLoyaltyPoints(100)">Update Loyalty Points</button> < Example with 100 points >
+    </form>
+
+    <script>
+        function updateLoyaltyPoints(loyaltyPoints) {
+            const userId = document.getElementById('user_id').value;
+            const data = {
+                user_id: userId,
+                loyalty_points: loyaltyPoints
+            };
+
+            fetch('/api/update-loyalty-points', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert(data.message || data.error);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Loyalty Points</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Update Loyalty Points</h2>
+        <form method="POST" action="{{ url_for('main.update_points') }}">
+            <input type="hidden" name="user_id" value="{{ current_user.id }}">
+            <div class="form-group">
+                <label for="loyalty_points">Loyalty Points</label>
+                <input type="number" class="form-control" id="loyalty_points" name="loyalty_points" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Points</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-info">
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
